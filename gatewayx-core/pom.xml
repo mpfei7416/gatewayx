@@ -24,7 +24,7 @@
         <dependency>
             <groupId>com.lmpdyy</groupId>
             <artifactId>gatewayx-common</artifactId>
-            <version>1.0.0</version>
+            <version>${gatewayx-commonn.version}</version>
         </dependency>
 
         <!--async-http-client-->
