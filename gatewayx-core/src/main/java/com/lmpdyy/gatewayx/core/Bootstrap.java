@@ -10,6 +10,7 @@ public class Bootstrap {
 
     public static void main(String[] args) {
         // 1、加载网关的配置信息
+        RapidConfigLoader.getInstance().load(args);
 
         // 2、 插件初始化
 
