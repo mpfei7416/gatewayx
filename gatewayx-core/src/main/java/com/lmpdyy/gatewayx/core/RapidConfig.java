@@ -26,7 +26,7 @@ public class RapidConfig {
     /**
      * 网关的注册中心地址
      */
-    private String registerAddress = "http://192.168.11.114:2379,http://192.168.11.115:2379,http://192.168.11.116:2379";
+    private String registerAddress = "http://192.168.11.114:2379,http://192.168.11.115:2379,http://192.168.11.116:2379";  // 替换为网关注册中心地址
 
     /**
      * 网关的命名空间
@@ -101,6 +101,7 @@ public class RapidConfig {
 
     // TODO
     // http请求 配置
+
 
 
 
