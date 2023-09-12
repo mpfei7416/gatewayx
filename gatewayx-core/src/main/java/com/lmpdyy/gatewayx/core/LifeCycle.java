@@ -1,25 +1,29 @@
 package com.lmpdyy.gatewayx.core;
 
 /**
- * @ClassName LifeCycle
+ * @InterfaceName LifeCycle
  * @description: 生命周期管理接口
  * @author: nxlea
- * @create: 2023-08-24 15:14
- */
+ * @create: 2023-09-05 10:54
+ **/
 public interface LifeCycle {
     /**
-     * 生命周期组件的初始化方法
+     * 生命周期接口初始化方法
      */
     void init();
 
     /**
-     * 生命周期组件的启动方法
+     * 生命周期接口启动方法
      */
     void start();
 
+
     /**
-     * 生命周期组件的销毁方法
+     * 生命周期接口关系方法
      */
-    void deploy();
+    void shutdown();
+
+
+
 
 }

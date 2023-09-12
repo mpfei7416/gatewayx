@@ -4,23 +4,24 @@ import com.lmpdyy.gatewayx.core.LifeCycle;
 
 /**
  * @ClassName NettyHttpServer
- * @description: 接收请求的核心类
+ * @description: 承接所有网络请求的核心类
  * @author: nxlea
- * @create: 2023-08-24 15:19
+ * @create: 2023-09-12 15:06
  */
 public class NettyHttpServer implements LifeCycle {
+
     @Override
     public void init() {
-        // TODO
+
     }
 
     @Override
     public void start() {
-        // TODO
+
     }
 
     @Override
-    public void deploy() {
-        // TODO
+    public void shutdown() {
+
     }
 }

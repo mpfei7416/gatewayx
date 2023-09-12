@@ -12,6 +12,7 @@ public class Bootstrap {
         // 1、加载网关的配置信息
         RapidConfigLoader.getInstance().load(args);
 
+
         // 2、 插件初始化
 
         // 3、获取注册中心服务信息放入本地缓存 -->  初始化服务注册器， 动态监听配置的新增，修改，删除操作

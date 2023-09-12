@@ -1,8 +1,8 @@
 package com.lmpdyy.gatewayx.core;
 
-
 import com.lmpdyy.gatewayx.common.util.PropertiesUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.logging.log4j.util.PropertiesUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,92 +11,79 @@ import java.util.Properties;
 
 /**
  * @ClassName RapidConfigLoader
- * @description: 网关配置信息加载，
- *   网关配置加载规则【加载顺序规则】: 优先级高的覆盖优先级低的配置信息
- *      1、运行参数
- *      2、JVM 参数
- *      3、环境变量参数
- *      4、配置文件
- *      5、内部RapidConfig 对象的默认值
+ * @description:  网关 配置信息加载类
+ *  网关配置加载规则： 优先级顺序： 优先级高的覆盖优先级低的配置
+ *      运行参数最高 ->  jvm 参数  -> 环境变量 -> 配置文件 ——> 内部RapidConfig 对象默认值（最低   ）
  * @author: nxlea
- * @create: 2023-08-24 14:33
+ * @create: 2023-09-11 17:26
  */
 @Slf4j
 public class RapidConfigLoader {
 
-    private static final String CONFIG_EVN_PREFIEX = "RAPID_";
+    private static final String CONFIG_EVM_PREFIEX = "RAPID_";
 
-    private static final String CONFIG_JVM_PREFIEX = "RAPID.";
+    private static final String CONFIG_JVM_PREFIEX = "rapid.";
 
     private static final String CONFIG_FILE = "rapid.properties";
 
-    private static final  RapidConfigLoader INSTANCE = new RapidConfigLoader();
+    private final static RapidConfigLoader INSTANCE = new RapidConfigLoader();
 
     private RapidConfig rapidConfig = new RapidConfig();
+
+    public RapidConfigLoader() {
+    }
 
     public static RapidConfigLoader getInstance() {
         return INSTANCE;
     }
 
-    public static RapidConfig getRapidConfig(){
+    public static RapidConfig getRapidConfig() {
         return INSTANCE.rapidConfig;
     }
 
     public RapidConfig load(String args[]) {
-        // 根据优先级高低创建RapidConfig 对象
+        // 加载配置逻辑
 
-        // 1、 配置文件
+        // 配置文件参数加载
         {
             InputStream inputStream = RapidConfigLoader.class.getClassLoader().getResourceAsStream(CONFIG_FILE);
             if (inputStream != null) {
                 Properties properties = new Properties();
                 try {
                     properties.load(inputStream);
-                    PropertiesUtils.properties2Object(properties, rapidConfig);
                 } catch (IOException e) {
-                    log.warn("#RapidConfigLoader# load config file: {} is error info {}", CONFIG_FILE, e.getMessage());
-                    throw new RuntimeException(e);
-                }finally {
+                    log.warn("#RapidConfigLoader# load config file: {} is error", CONFIG_FILE, e);
+                } finally {
                     try {
                         inputStream.close();
-                    } catch (Exception e) {
-                        throw new RuntimeException(e);
+                    } catch (IOException e) {
+                        // log.warn("");
                     }
-
                 }
             }
+
         }
 
-        // 2、环境变量
-
+        // JVM 参数
         {
-            Map<String, String> getenv = System.getenv();
+            Map<String, String> env = System.getenv();
             Properties properties = new Properties();
-            properties.putAll(getenv);
-            PropertiesUtils.properties2Object(properties, rapidConfig, CONFIG_EVN_PREFIEX);
-        }
-
-        // 3、JVM参数
-
-        {
-            Properties properties = System.getProperties();
+            properties.putAll(env);
             PropertiesUtils.properties2Object(properties, rapidConfig, CONFIG_JVM_PREFIEX);
         }
 
-        //4、运行参数
 
+        // 运行参数
         {
             if (args != null && args.length > 0) {
                 Properties properties = new Properties();
                 for (String arg : args) {
-                    if (arg.startsWith("--") && arg.contains("=")) {
-                        properties.put(arg.substring(2, arg.indexOf("=")), arg.substring(arg.indexOf("=") + 1));
-                    }
-                    PropertiesUtils.properties2Object(properties, rapidConfig);
+                    properties.put(arg.substring(2, arg.indexOf("=")), arg.substring(arg.indexOf("=") + 1));
                 }
+                PropertiesUtils.properties2Object(properties, rapidConfig);
             }
-        }
 
+        }
         return rapidConfig;
     }
 }
