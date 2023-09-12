@@ -1,6 +1,8 @@
 package com.lmpdyy.gatewayx.core.netty.processor;
 
 import com.lmpdyy.gatewayx.core.LifeCycle;
+import com.lmpdyy.gatewayx.core.context.HttpRequestWrapper;
+import org.apache.dubbo.rpc.filter.EchoFilter;
 
 /**
  * @ClassName NettyProcessor
@@ -8,21 +10,12 @@ import com.lmpdyy.gatewayx.core.LifeCycle;
  * @author: nxlea
  * @create: 2023-09-12 15:11
  */
-public class NettyProcessor implements LifeCycle {
+public interface NettyProcessor {
+
+    void process(HttpRequestWrapper httpRequestWrapper) throws Exception;
+
+    void start();
 
 
-    @Override
-    public void init() {
-
-    }
-
-    @Override
-    public void start() {
-
-    }
-
-    @Override
-    public void shutdown() {
-
-    }
+    void shutdown();
 }
