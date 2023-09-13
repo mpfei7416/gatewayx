@@ -4,13 +4,13 @@ import com.lmpdyy.gatewayx.core.context.HttpRequestWrapper;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * @ClassName NettyCoreProcessor
- * @description: 核心流程的主执行逻辑
+ * @ClassName NettyMpmcProcessor
+ * @description: mpmc的核心实现处理器, 最终我们还是要使用NettyCoreProcessor
  * @author: nxlea
- * @create: 2023-09-12 15:54
+ * @create: 2023-09-13 10:37
  */
 @Slf4j
-public class NettyCoreProcessor implements NettyProcessor{
+public class NettyMpmcProcessor implements NettyProcessor{
 
 
 
@@ -28,5 +28,4 @@ public class NettyCoreProcessor implements NettyProcessor{
     public void shutdown() {
 
     }
-
 }
