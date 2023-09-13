@@ -1,7 +1,11 @@
 package com.lmpdyy.gatewayx.core;
 
+import com.lmpdyy.gatewayx.common.constants.RapidBufferHelper;
 import com.lmpdyy.gatewayx.core.netty.NettyHttpClient;
 import com.lmpdyy.gatewayx.core.netty.NettyHttpServer;
+import com.lmpdyy.gatewayx.core.netty.processor.NettyBatchEventProcessor;
+import com.lmpdyy.gatewayx.core.netty.processor.NettyCoreProcessor;
+import com.lmpdyy.gatewayx.core.netty.processor.NettyMpmcProcessor;
 import com.lmpdyy.gatewayx.core.netty.processor.NettyProcessor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,12 +39,24 @@ public class RapidContainer implements LifeCycle {
     @Override
     public void init() {
         // 1、构建核心处理器
+        NettyCoreProcessor nettyCoreProcessor = new NettyCoreProcessor();
 
         // 2、是否开启缓存
+        String bufferType = rapidConfig.getBufferType();
+        if (RapidBufferHelper.isFlusher(bufferType)) {
+            nettyProcessor = new NettyBatchEventProcessor(rapidConfig, nettyCoreProcessor);
+        } else if (RapidBufferHelper.isMpmc(bufferType)) {
+            // todo 添加构建参数
+            nettyProcessor = new NettyMpmcProcessor();
+        } else {
+            nettyProcessor = nettyCoreProcessor;
+        }
 
         // 3、 创建NettyHttpServer
+//        nettyHttpServer = new NettyHttpServer(rapidConfig, nettyProcessor);
 
         // 4、创建NettyHttpClient
+        nettyHttpClient = new NettyHttpClient();
 
     }
 

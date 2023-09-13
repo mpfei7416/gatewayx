@@ -1,8 +1,10 @@
 package com.lmpdyy.gatewayx.core;
 
+import com.lmax.disruptor.*;
 import com.lmpdyy.gatewayx.common.constants.BasicConst;
 import com.lmpdyy.gatewayx.common.constants.RapidBufferHelper;
 import com.lmpdyy.gatewayx.common.util.NetUtils;
+import lombok.Data;
 
 /**
  * @ClassName RapidConfig
@@ -10,6 +12,7 @@ import com.lmpdyy.gatewayx.common.util.NetUtils;
  * @author: nxlea
  * @create: 2023-08-23 10:09
  */
+@Data
 public class RapidConfig {
 
 
@@ -85,7 +88,7 @@ public class RapidConfig {
     /**
      * 网关队列缓冲模式， Flusher or MPMC 模式
      */
-    private String bufferType = RapidBufferHelper.FLUSHER;
+    private String bufferType = RapidBufferHelper.MPMC;
 
     /**
      *  内存队列大小
@@ -101,6 +104,72 @@ public class RapidConfig {
 
     // TODO
     // http请求 配置
+    /**
+     * 默认请求超时时间
+     */
+    private long requestTimeout = 3000;
+
+    /**
+     * 默认路由转发的慢调用时间 2s
+     */
+    private long routeTimeout = 2000;
+
+    /**
+     *  kafka 地址
+     */
+    private String kafkaAddress = "";
+
+    /**
+     * 网关服务指标消息主题
+     */
+    private String metricTopic ="rapid-metric-topic";
+
+    public WaitStrategy getATureWaitStrategy() {
+        switch (waitStrategy) {
+            case "busySpin":
+                return new BusySpinWaitStrategy();
+            case "yielding":
+                return new YieldingWaitStrategy();
+            case "sleeping":
+                return new SleepingWaitStrategy();
+            default:
+                return new BlockingWaitStrategy();
+        }
+    }
+
+
+    // http Async参数选项
+    /**
+     * 连接超时时间
+     */
+    private int httpConnectionTimeOut = 30 * 1000;
+
+    /**
+     * 请求超时时间
+     */
+    private int httpRequestTimeout = 30 * 1000;
+
+    /**
+     * 客户端请求重试次数
+     */
+    private int httpMaxRequestRetry = 2;
+
+    /**
+     * 客户端请求的最大连接数
+     */
+    private int httpMaxConnections = 10000;
+
+    /**
+     * 客户端每个地址支持的最大连接数
+     */
+    private int httpConnectionsPerHost = 8000;
+
+    /**
+     *  客户端空闲连接超时时间， 默认为60s
+     */
+    private int httpPoolConnectionIdleTimeout = 60 * 1000;
+
+
 
 
 
